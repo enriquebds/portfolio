@@ -3,7 +3,7 @@ export const userData = {
   githubUser: "enriquebds",
   linkedinUser: "enrique-barbosa-6b3aaa22b",
   whatsappNumber: "+5511959267759",
-  emailUser: "samuel@kenzie.com.br",
-  instagramUser: "samuelleaoui",
+  emailUser: "enrique.barbosasilva@gmail.com",
+  instagramUser: "enrique_bds",
   facebookUser: "",
 };
