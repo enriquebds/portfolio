@@ -10,6 +10,7 @@ import {
 import { Text } from "@/styles/Text";
 import { useEffect, useState } from "react";
 import { FaGithub, FaShare } from "react-icons/fa";
+import { SiVercel } from "react-icons/si";
 import { userData } from "@/utils/userData";
 
 interface ReposType {
@@ -73,10 +74,26 @@ export const Project = (): JSX.Element => {
               )}
             </ProjectStack>
 
-            <Text type="body1" color="grey2">
+            <Text type="body2" color="grey2">
               {repository.description?.substring(0, 129)}
             </Text>
             <ProjectLinks>
+              {repository.name == "Pokedex" ? (
+                <ProjectLink
+                  target="_blank"
+                  href={"https://pokemon-house.vercel.app/"}
+                >
+                  <SiVercel /> Vercel
+                </ProjectLink>
+              ) : null}
+              {repository.name == "portfolio" ? (
+                <ProjectLink
+                  target="_blank"
+                  href={"https://enrique-portfolio-mocha.vercel.app/"}
+                >
+                  <SiVercel /> Vercel
+                </ProjectLink>
+              ) : null}
               <ProjectLink target="_blank" href={repository.html_url}>
                 <FaGithub /> Github Code
               </ProjectLink>
