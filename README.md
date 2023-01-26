@@ -4,6 +4,12 @@ Um portfólio profissional demonstrando de forma objetiva minhas capacidades té
 
 ---
 
+Link do Deploy:
+
+https://enrique-portfolio-mocha.vercel.app/
+
+---
+
 ## 🎲 Utilizando projeto
 
 ### ▪️ Baixando projeto e instalando dependências
