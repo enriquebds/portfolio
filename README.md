@@ -1,6 +1,6 @@
 # 💻 Portfólio
 
-Um portfólio profissional demonstrando de forma objetiva minhas capacidades técnicas e resolução de problemas, por meio de uma interface simples, moderna e intuitiva
+Um portfólio profissional demonstrando de forma objetiva minhas capacidades técnicas e resolução de problemas, por meio de uma interface simples, moderna e intuitiva.
 
 ---
 
