@@ -4,7 +4,7 @@ Um portfólio profissional demonstrando de forma objetiva minhas capacidades té
 
 ---
 
-Link do Deploy:
+Link do Deploy
 
 https://enrique-portfolio-mocha.vercel.app/
 
