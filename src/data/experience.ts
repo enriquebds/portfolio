@@ -5,8 +5,8 @@ export const experiences: Experience[] = [
     id: 'group-link-one',
     company: 'Group Link One',
     role: 'Front-end Engineer',
-    period: 'Ago 2022 — Presente',
-    location: 'São Paulo, SP — Híbrido',
+    period: 'Mar 2023 — Presente',
+    location: 'Vila Olímpia, SP',
     description:
       'Desenvolvimento de plataformas B2B SaaS focadas em AIoT e smart cities, com foco em performance, escalabilidade e experiência do usuário.',
     bullets: [
@@ -19,7 +19,7 @@ export const experiences: Experience[] = [
       'Configurou pipelines de CI/CD com GitHub Actions e padronizou fluxos de desenvolvimento com ESLint, Prettier e Husky',
       'Aplicou testes unitários e de integração com Vitest e React Testing Library, atingindo cobertura de 80%+ em módulos críticos',
       'Otimizou bundle size e performance de carregamento com lazy loading, code splitting e memoization estratégica',
-      'Participou ativamente de ceriônias ágeis (Daily, Sprint Planning, Retrospectiva) em squads multidisciplinares',
+      'Participou ativamente de cerimônias ágeis (Daily, Sprint Planning, Retrospectiva) em squads multidisciplinares',
     ],
     stack: [
       'React',
