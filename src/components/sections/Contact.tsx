@@ -7,13 +7,17 @@ import { useInView } from '../../hooks/useInView'
 import { staggerContainerVariants, fadeUpVariants } from '../../utils/constants'
 import { cn } from '../../utils/cn'
 
-const schema = yup.object({
+type FormData = {
+  name: string
+  email: string
+  message: string
+}
+
+const schema: yup.ObjectSchema<FormData> = yup.object({
   name: yup.string().min(2, 'Mínimo 2 caracteres').required('Nome obrigatório'),
   email: yup.string().email('Email inválido').required('Email obrigatório'),
   message: yup.string().min(10, 'Mínimo 10 caracteres').required('Mensagem obrigatória'),
 })
-
-type FormData = yup.InferType<typeof schema>
 
 const contactItems = [
   {
@@ -64,6 +68,7 @@ export function Contact() {
   const onSubmit = (data: FormData) => {
     const subject = encodeURIComponent(`Contato via portfólio — ${data.name}`)
     const body = encodeURIComponent(`Nome: ${data.name}\nEmail: ${data.email}\n\n${data.message}`)
+    // eslint-disable-next-line react-hooks/immutability
     window.location.href = `mailto:enrique.barbosasilva@gmail.com?subject=${subject}&body=${body}`
     reset()
   }
@@ -88,6 +93,7 @@ export function Contact() {
         />
 
         <div ref={ref as React.RefObject<HTMLDivElement>} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Left: Contact info */}
           <motion.div
             variants={staggerContainerVariants}
             initial="hidden"
@@ -134,6 +140,7 @@ export function Contact() {
             </motion.div>
           </motion.div>
 
+          {/* Right: Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -150,10 +157,15 @@ export function Contact() {
               </h3>
 
               <div className="space-y-4">
+                {/* Name */}
                 <div>
-                  <label htmlFor="name" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">nome</label>
+                  <label htmlFor="name" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">
+                    nome
+                  </label>
                   <input
-                    id="name" type="text" placeholder="Seu nome"
+                    id="name"
+                    type="text"
+                    placeholder="Seu nome"
                     {...register('name')}
                     aria-invalid={!!errors.name}
                     className={cn(inputBase, errors.name ? 'border-red-500 focus:border-red-500' : 'border-[var(--border)] focus:border-accent')}
@@ -163,10 +175,15 @@ export function Contact() {
                   )}
                 </div>
 
+                {/* Email */}
                 <div>
-                  <label htmlFor="email" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">email</label>
+                  <label htmlFor="email" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">
+                    email
+                  </label>
                   <input
-                    id="email" type="email" placeholder="seu@email.com"
+                    id="email"
+                    type="email"
+                    placeholder="seu@email.com"
                     {...register('email')}
                     aria-invalid={!!errors.email}
                     className={cn(inputBase, errors.email ? 'border-red-500 focus:border-red-500' : 'border-[var(--border)] focus:border-accent')}
@@ -176,10 +193,14 @@ export function Contact() {
                   )}
                 </div>
 
+                {/* Message */}
                 <div>
-                  <label htmlFor="message" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">mensagem</label>
+                  <label htmlFor="message" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">
+                    mensagem
+                  </label>
                   <textarea
-                    id="message" rows={5}
+                    id="message"
+                    rows={5}
                     placeholder="Olá, Enrique! Gostaria de conversar sobre..."
                     {...register('message')}
                     aria-invalid={!!errors.message}
