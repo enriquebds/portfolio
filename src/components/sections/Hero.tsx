@@ -1,0 +1,187 @@
+import { motion } from 'framer-motion'
+import { CodeSnippet } from '../ui/CodeSnippet'
+import { useTypewriter } from '../../hooks/useTypewriter'
+import { fadeUpVariants, staggerContainerVariants } from '../../utils/constants'
+
+const ROLES = [
+  'Front-end Engineer',
+  'React Developer',
+  'TypeScript Enthusiast',
+  'UI/UX Craftsman',
+  'B2B SaaS Builder',
+]
+
+const HERO_CODE = `import { useState, useEffect } from 'react'
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => clearTimeout(handler)
+  }, [value, delay])
+
+  return debouncedValue
+}
+
+export default useDebounce`
+
+export function Hero() {
+  const { displayText, isTyping } = useTypewriter({
+    strings: ROLES,
+    typeSpeed: 80,
+    deleteSpeed: 40,
+    pauseDuration: 2200,
+  })
+
+  return (
+    <section
+      id="hero"
+      aria-labelledby="hero-heading"
+      className="relative min-h-screen flex items-center pt-16 overflow-hidden"
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, var(--border) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--border) 1px, transparent 1px)
+          `,
+          backgroundSize: '64px 64px',
+          opacity: 0.4,
+        }}
+      />
+      <div
+        className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(0,200,150,0.08) 0%, transparent 70%)',
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto px-6 w-full py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            variants={staggerContainerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.span
+              variants={fadeUpVariants}
+              className="font-mono text-sm text-accent mb-4 block"
+            >
+              $ whoami
+            </motion.span>
+
+            <motion.div variants={fadeUpVariants}>
+              <p className="font-mono text-base text-[var(--muted)] mb-2">
+                Olá, sou
+              </p>
+              <h1
+                id="hero-heading"
+                className="font-display text-6xl md:text-7xl xl:text-8xl font-extrabold leading-none text-[var(--text)]"
+              >
+                Enrique
+                <br />
+                <span className="text-accent">Barbosa</span>
+              </h1>
+            </motion.div>
+
+            <motion.div variants={fadeUpVariants} className="mt-6 h-8 flex items-center">
+              <span className="font-mono text-lg md:text-xl text-[var(--muted)]">
+                {'> '}
+                <span className="text-[var(--text)]">{displayText}</span>
+                <motion.span
+                  animate={{ opacity: isTyping ? 1 : 0 }}
+                  transition={{ duration: 0.1 }}
+                  className="inline-block w-[2px] h-5 ml-0.5 bg-accent align-middle"
+                />
+              </span>
+            </motion.div>
+
+            <motion.div variants={fadeUpVariants} className="mt-5">
+              <span
+                className="inline-flex items-center gap-2 font-mono text-sm px-3 py-1.5 rounded-full border"
+                style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+              >
+                <span>📍</span>
+                São Paulo, Brasil
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                <span className="text-accent text-xs">Disponível</span>
+              </span>
+            </motion.div>
+
+            <motion.div variants={fadeUpVariants} className="mt-8 flex flex-wrap gap-3">
+              <motion.a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault()
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
+                className="font-body font-semibold text-sm px-6 py-3 rounded-lg text-[#0F111A] bg-accent transition-all"
+                style={{ boxShadow: '0 4px 20px rgba(0, 200, 150, 0.3)' }}
+              >
+                Falar comigo
+              </motion.a>
+              <motion.a
+                href="#experience"
+                onClick={(e) => {
+                  e.preventDefault()
+                  document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
+                className="font-body font-medium text-sm px-6 py-3 rounded-lg border border-[var(--border)] text-[var(--text)] hover:border-accent transition-all"
+              >
+                Ver experiência
+              </motion.a>
+            </motion.div>
+
+            <motion.div variants={fadeUpVariants} className="mt-8 flex flex-wrap gap-2">
+              {['React', 'TypeScript', 'Node.js', 'B2B SaaS', 'AIoT'].map(tag => (
+                <span
+                  key={tag}
+                  className="font-mono text-xs px-2.5 py-1 rounded bg-accent/10 text-accent border border-accent/20"
+                >
+                  {tag}
+                </span>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="hidden lg:block"
+          >
+            <CodeSnippet
+              code={HERO_CODE}
+              language="ts"
+              floating
+              className="max-w-md ml-auto"
+            />
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <span className="font-mono text-xs text-[var(--muted)]">scroll</span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-[1px] h-8 bg-gradient-to-b from-accent to-transparent"
+          />
+        </motion.div>
+      </div>
+    </section>
+  )
+}
