@@ -1,8 +1,19 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import { SectionTitle } from '../ui/SectionTitle'
 import { useInView } from '../../hooks/useInView'
 import { staggerContainerVariants, fadeUpVariants } from '../../utils/constants'
+import { cn } from '../../utils/cn'
+
+const schema = yup.object({
+  name: yup.string().min(2, 'Mínimo 2 caracteres').required('Nome obrigatório'),
+  email: yup.string().email('Email inválido').required('Email obrigatório'),
+  message: yup.string().min(10, 'Mínimo 10 caracteres').required('Mensagem obrigatória'),
+})
+
+type FormData = yup.InferType<typeof schema>
 
 const contactItems = [
   {
@@ -38,19 +49,23 @@ const contactItems = [
   },
 ]
 
+const inputBase = 'w-full font-body text-sm px-4 py-3 rounded-lg border bg-[var(--bg)] text-[var(--text)] placeholder:text-[var(--muted)] focus:outline-none transition-colors'
+
 export function Contact() {
   const { ref, isInView } = useInView({ threshold: 0.1 })
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+    reset,
+  } = useForm<FormData>({ resolver: yupResolver(schema), mode: 'onTouched' })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const subject = encodeURIComponent(`Contato via portfólio — ${formData.name}`)
-    const body = encodeURIComponent(`Nome: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)
+  const onSubmit = (data: FormData) => {
+    const subject = encodeURIComponent(`Contato via portfólio — ${data.name}`)
+    const body = encodeURIComponent(`Nome: ${data.name}\nEmail: ${data.email}\n\n${data.message}`)
     window.location.href = `mailto:enrique.barbosasilva@gmail.com?subject=${subject}&body=${body}`
+    reset()
   }
 
   return (
@@ -61,9 +76,7 @@ export function Contact() {
     >
       <div
         className="absolute top-0 left-1/3 w-80 h-80 rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(0,200,150,0.06) 0%, transparent 70%)',
-        }}
+        style={{ background: 'radial-gradient(circle, rgba(0,200,150,0.06) 0%, transparent 70%)' }}
       />
 
       <div className="max-w-7xl mx-auto px-6">
@@ -87,12 +100,8 @@ export function Contact() {
               <div className="flex items-start gap-3">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse flex-shrink-0 mt-1.5" />
                 <div>
-                  <p className="font-body font-semibold text-[var(--text)] text-sm">
-                    Aberto a oportunidades
-                  </p>
-                  <p className="font-mono text-xs text-accent mt-0.5">
-                    CLT ou PJ · Híbrido ou Remoto
-                  </p>
+                  <p className="font-body font-semibold text-[var(--text)] text-sm">Aberto a oportunidades</p>
+                  <p className="font-mono text-xs text-accent mt-0.5">CLT ou PJ · Híbrido ou Remoto</p>
                 </div>
               </div>
             </motion.div>
@@ -115,13 +124,7 @@ export function Contact() {
                     <p className="font-mono text-xs text-[var(--muted)]">{item.label}</p>
                     <p className="font-body text-sm text-[var(--text)] font-medium">{item.value}</p>
                   </div>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                     className="ml-auto text-[var(--muted)] group-hover:text-accent opacity-0 group-hover:opacity-100 transition-all"
                   >
                     <polyline points="9 18 15 12 9 6" />
@@ -137,7 +140,8 @@ export function Contact() {
             transition={{ delay: 0.2, duration: 0.6 }}
           >
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
               className="p-6 md:p-8 rounded-2xl border border-[var(--border)] bg-[var(--card)]"
               style={{ boxShadow: '0 4px 24px var(--shadow)' }}
             >
@@ -149,39 +153,63 @@ export function Contact() {
                 <div>
                   <label htmlFor="name" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">nome</label>
                   <input
-                    id="name" name="name" type="text" required
-                    value={formData.name} onChange={handleChange}
-                    placeholder="Seu nome"
-                    className="w-full font-body text-sm px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--text)] placeholder:text-[var(--muted)] focus:outline-none focus:border-accent transition-colors"
+                    id="name" type="text" placeholder="Seu nome"
+                    {...register('name')}
+                    aria-invalid={!!errors.name}
+                    className={cn(inputBase, errors.name ? 'border-red-500 focus:border-red-500' : 'border-[var(--border)] focus:border-accent')}
                   />
+                  {errors.name && (
+                    <p className="mt-1.5 font-mono text-xs text-red-500">{errors.name.message}</p>
+                  )}
                 </div>
+
                 <div>
                   <label htmlFor="email" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">email</label>
                   <input
-                    id="email" name="email" type="email" required
-                    value={formData.email} onChange={handleChange}
-                    placeholder="seu@email.com"
-                    className="w-full font-body text-sm px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--text)] placeholder:text-[var(--muted)] focus:outline-none focus:border-accent transition-colors"
+                    id="email" type="email" placeholder="seu@email.com"
+                    {...register('email')}
+                    aria-invalid={!!errors.email}
+                    className={cn(inputBase, errors.email ? 'border-red-500 focus:border-red-500' : 'border-[var(--border)] focus:border-accent')}
                   />
+                  {errors.email && (
+                    <p className="mt-1.5 font-mono text-xs text-red-500">{errors.email.message}</p>
+                  )}
                 </div>
+
                 <div>
                   <label htmlFor="message" className="font-mono text-xs text-[var(--muted)] mb-1.5 block">mensagem</label>
                   <textarea
-                    id="message" name="message" required rows={5}
-                    value={formData.message} onChange={handleChange}
+                    id="message" rows={5}
                     placeholder="Olá, Enrique! Gostaria de conversar sobre..."
-                    className="w-full font-body text-sm px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--text)] placeholder:text-[var(--muted)] focus:outline-none focus:border-accent transition-colors resize-none"
+                    {...register('message')}
+                    aria-invalid={!!errors.message}
+                    className={cn(inputBase, 'resize-none', errors.message ? 'border-red-500 focus:border-red-500' : 'border-[var(--border)] focus:border-accent')}
                   />
+                  {errors.message && (
+                    <p className="mt-1.5 font-mono text-xs text-red-500">{errors.message.message}</p>
+                  )}
                 </div>
+
                 <motion.button
                   type="submit"
+                  disabled={isSubmitting}
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full font-body font-semibold text-sm py-3 rounded-lg text-[#0F111A] bg-accent transition-all"
+                  className="w-full font-body font-semibold text-sm py-3 rounded-lg text-[#0F111A] bg-accent transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{ boxShadow: '0 4px 16px rgba(0, 200, 150, 0.25)' }}
                 >
-                  Enviar mensagem
+                  {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
                 </motion.button>
+
+                {isSubmitSuccessful && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center font-mono text-xs text-accent"
+                  >
+                    ✓ Mensagem enviada com sucesso!
+                  </motion.p>
+                )}
               </div>
             </form>
           </motion.div>
